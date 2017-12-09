@@ -1,0 +1,2 @@
+# AngularFirebaseChat
+Angular Firebase Chat
