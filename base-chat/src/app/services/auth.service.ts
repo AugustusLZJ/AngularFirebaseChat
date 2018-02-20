@@ -4,7 +4,6 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
-//import { User } from '../models/user.model';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +45,7 @@ export class AuthService {
 
   setUserData(email: string, displayName: string, status: string): void {
     const path = '/user/'+this.currentUserId;
-    console.log("path: "+path);
+    //console.log("path: "+path);
     const data = {
       email: email,
       displayName: displayName,

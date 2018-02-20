@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
 // import { FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/Observable';
@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import * as firebase from 'firebase/app';
 
 import { ChatMessage } from '../models/chat-message.model';
+import { User } from '../models/user.model';
 
 @Injectable()
 export class ChatService {
@@ -22,14 +23,14 @@ export class ChatService {
     this.afAuth.authState.subscribe(auth => {
       if (auth !== undefined && auth !== null) {
         this.user = auth;
-        this.getUser().valueChanges().subscribe(a=>{
-          this.userName = a.displayName;
+        this.getUser().valueChanges().subscribe(userInfo=>{
+          this.userName = userInfo.displayName;
         })
       }
     });
   }
 
-  getUser() {
+  getUser(): AngularFireObject<User> {
     const uid = this.user.uid;
     //console.log("uid: "+uid);
     const path = '/user/'+uid;
@@ -60,24 +61,6 @@ export class ChatService {
 
   getMessages(): AngularFireList<ChatMessage> {
     return this.db.list('message', ref => ref.orderByKey().limitToLast(25));
-
-    /*return this.db.list('message').snapshotChanges().map(actions => {
-      return actions.map(action => action.orderByKey().limitToLast(25));
-    });.subscribe(items => {
-      return items.map(item => item.key);
-    });
-
-    var mlist: AngularFireList<ChatMessage>= [];
-    console.log('Calling getMessages()...');
-    //return this.db.list('message', ref => ref.orderByKey().limitToLast(25)).valueChanges();
-    this.db.list('message', ref => ref.orderByKey().limitToLast(25)).valueChanges().subscribe(messages=>{
-      console.log(messages);
-      messages.forEach(message=>{
-        mlist.push(message);
-      });
-    });
-    console.log(mlist);
-    return mlist;*/
   }
 
   getTimeStamp() {
